@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "gb-packers"
+name = "gb_packers"
 version = "0.1.0"
 description = "Tool to output the Green Bay Packers schedule, stats coming soon!"
 authors = ["JoshWilbur"]
