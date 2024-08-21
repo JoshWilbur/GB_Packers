@@ -1,0 +1,36 @@
+# Been writing some YAML during my internship at IDEXX. Finally have a chance to use it in a personal project!
+
+name: CI script
+
+# Run this script every time something is pushed to a branch or main
+on:
+  push:
+    branches:
+      - '**'
+    tags-ignore:
+      - '**'
+jobs:
+  code_check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4 
+        with:
+          python-version: '3.11.8' # Running this locally
+
+      - name: Install Poetry
+        uses: python-poetry/action@v2
+        with:
+          poetry-version: '1.8.3' # Also running this locally
+
+      - name: Install dependencies from lock file
+        run: |
+          poetry install
+
+      - name: Run flake8
+        run: |
+          poetry run flake8 .
