@@ -23,10 +23,10 @@ jobs:
           python-version: '3.11.8' # Running this locally
 
       - name: Install Poetry
-        uses: python-poetry/action@v2
-        with:
-          poetry-version: '1.8.3' # Also running this locally
-
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          export PATH="$HOME/.local/bin:$PATH"
+        
       - name: Install dependencies from lock file
         run: |
           poetry install
