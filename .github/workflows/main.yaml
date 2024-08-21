@@ -1,6 +1,6 @@
 # Been writing some YAML during my internship at IDEXX. Finally have a chance to use it in a personal project!
 
-name: CI script
+name: CI
 
 # Run this script every time something is pushed to a branch or main
 on:
@@ -9,6 +9,7 @@ on:
       - '**'
     tags-ignore:
       - '**'
+
 jobs:
   code_check:
     runs-on: ubuntu-latest
@@ -31,6 +32,6 @@ jobs:
         run: |
           poetry install
 
-      - name: Run flake8
+      - name: Run linting and type checking
         run: |
-          poetry run flake8 .
+          ./code_check.sh

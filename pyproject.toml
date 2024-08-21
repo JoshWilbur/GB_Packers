@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Tool to output the Green Bay Packers schedule, stats coming soon!"
 authors = ["JoshWilbur"]
 readme = "README.md"
+package-mode = false
 
 [[tool.poetry.source]]
 name = "public_pypi"
@@ -15,6 +16,7 @@ python = "^3.11"
 [tool.poetry.dev-dependencies]
 flake8 = "*"
 mypy = "*"
+black = "*"
 
 [build-system]
 requires = ["poetry-core"]
