@@ -1,33 +1,53 @@
 import csv
 from datetime import datetime
 
-# Load in schedule file
-schedule_file = "packers_schedule_2024.csv"
 
+# This class will allow easy access to the Packers schedule
+class Packers_Games:
+    def __init__(self, csv_path):
+        # Load in schedule file
+        self.csv_path = csv_path
+        self.game_schedule = self._import_schedule()
 
-# Function to obtain the closest game based off system time
-def find_next_game(csv_path):
-    next_game = None
+    # Load in schedule
+    def _import_schedule(self):
+        schedule = []
+        with open(self.csv_path, mode="r") as file:
+            csv_reader = csv.DictReader(file)
+            for row in csv_reader:
+                row["Date"] = datetime.strptime(row["Date"], "%Y-%m-%d")
+                schedule.append(row)
+        return schedule
 
-    # Obtain current time
-    now = datetime.now()
+    # Find the next game
+    def next_game(self):
+        # Obtain current time
+        now = datetime.now()
+        for game in self.game_schedule:
+            if game["Date"] >= now:
+                return game
+        return None
 
-    # Open csv with read permission
-    with open(csv_path, mode="r") as file:
-        csv_reader = csv.DictReader(file)
-        for row in csv_reader:
-            game_date = datetime.strptime(row["Date"], "%Y-%m-%d")
+    # Allow printing of the next game
+    def print_next_game(self):
+        self.closest_game = self.next_game()
 
-            # Return game if one is found, else return none
-            if game_date >= now:
-                next_game = row
-                return next_game
-    return None
+        if self.closest_game is not None:
+            game_date = self.closest_game["Date"].strftime("%B %d, %Y")
+            print(
+                f"Next Packers Game:\n"
+                f"Game {self.closest_game['Game']}: {game_date}"
+                f" at {self.closest_game['Time_EST']} EST\n"
+                f"Opponent: {self.closest_game['Opponent']}"
+            )
+        else:
+            print("No upcoming games found")
 
 
 def main():
-    nearest_game = find_next_game(schedule_file)
-    print(nearest_game)
+    schedule_file_2024 = "packers_schedule_2024.csv"
+    gb_packers = Packers_Games(schedule_file_2024)
+    gb_packers.print_next_game()
 
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ I am a diehard Green Bay Packers fan who also enjoys programming. This project c
 
 TODO:
 * Make ascii art logo an option for command (--logo)
+* Add opponent record
 * Add stats and dynamic updating (try to keep offline as much as possible)
 
 Bells and whistles:
