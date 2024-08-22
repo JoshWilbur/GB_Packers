@@ -45,7 +45,7 @@ class Packers_Games:
 
 
 def main():
-    schedule_file_2024 = "packers_schedule_2024.csv"
+    schedule_file_2024 = "csv_files/packers_schedule_2024.csv"
     gb_packers = Packers_Games(schedule_file_2024)
     gb_packers.print_next_game()
 

@@ -3,14 +3,16 @@ from bs4 import BeautifulSoup
 import requests
 
 
-# This class has the ability to scrape stats from PFR (see README)
-class Packers_Stats:
-    def __init__(self, url):
-        self.url = url
+# This class has the ability to scrape team stats from PFR (see README)
+class Stats:
+    def __init__(self, team, year):
+        self.url = (
+            f"https://www.pro-football-reference.com/teams/{team}/{year}.htm#games"
+        )
         self.data = []
 
     # ETHICAL DATA SCRAPING ROBOT
-    def scrape_pfr_data(self):
+    def scrape_team_data(self):
         # Fetch website and error check
         response = requests.get(self.url)
         if response.status_code == 200:
@@ -80,14 +82,15 @@ class Packers_Stats:
         print(f"Data successfully saved to {filename}")
 
     def scrape_and_save(self, filename):
-        self.scrape_pfr_data()
+        self.scrape_team_data()
         self.save_to_csv(filename)
 
 
 def main():
-    url = "https://www.pro-football-reference.com/teams/gnb/2023.htm#games"
-    stats = Packers_Stats(url)
-    stats.scrape_and_save("packers_team_stats_2023.csv")
+    team = "gnb"
+    year = "2023"
+    stats = Stats(team, year)
+    stats.scrape_and_save("csv_files/packers_team_stats_2023.csv")
 
 
 if __name__ == "__main__":
