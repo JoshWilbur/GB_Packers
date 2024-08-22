@@ -17,6 +17,8 @@ python = "^3.11"
 flake8 = "*"
 mypy = "*"
 black = "*"
+requests = "*"
+bs4 = "*"
 
 [build-system]
 requires = ["poetry-core"]
