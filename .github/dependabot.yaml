@@ -1,0 +1,18 @@
+# Dependabot file to manage dependencies
+version: 2
+updates:
+  # This basically just keeps two lines up to date (main.yaml: 19, 22)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "JoshWilbur"
+
+  # Manage python packages via pip
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "JoshWilbur"
