@@ -3,6 +3,7 @@ I am a diehard Green Bay Packers fan who also enjoys programming. This project c
 
 TODO:
 * Allow for searching of a certain game (add advanced output, maybe clean up more)
+* Add .gitignore for pycache
 * Fix code_check.sh and requests warning
 * Allow for easy use in the console (ie: turn this into a package)
 * Unit tests

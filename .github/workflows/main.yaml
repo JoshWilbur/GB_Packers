@@ -11,7 +11,7 @@ on:
       - '**'
 
 jobs:
-  code_check:
+  check_and_test_code:
     runs-on: ubuntu-latest
 
     steps:
