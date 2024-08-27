@@ -1,10 +1,11 @@
 import csv
 from datetime import datetime
+from typing import Union, TextIO
 
 
 # This class will allow easy access to the Packers schedule
 class Packers_Games:
-    def __init__(self, csv_path):
+    def __init__(self, csv_path: Union[str, TextIO]):
         # Load in schedule file
         self.csv_path = csv_path
         self.game_schedule = self._import_schedule()

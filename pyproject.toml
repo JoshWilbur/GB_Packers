@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "gb_packers"
+name = "gb-packers"
 version = "0.1.0"
 description = "Tool to output the Green Bay Packers schedule, stats coming soon!"
 authors = ["JoshWilbur"]
@@ -19,6 +19,7 @@ mypy = "*"
 black = "*"
 requests = "*"
 bs4 = "*"
+pytest = "*"
 
 [build-system]
 requires = ["poetry-core"]
