@@ -35,3 +35,7 @@ jobs:
       - name: Run linting and type checking
         run: |
           ./code_check.sh
+
+      - name: Run test scripts 
+        run: |
+          poetry run pytest
