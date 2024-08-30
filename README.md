@@ -3,10 +3,8 @@ I am a diehard Green Bay Packers fan who also enjoys programming. This project c
 
 TODO:
 * Allow for searching of a certain game (add advanced output, maybe clean up more)
-* Fix code_check.sh and requests warning
+* Unit testing for scrape_stats.py
 * Allow for easy use in the console (ie: turn this into a package)
-* Unit tests
-* Add stats and dynamic updating (try to keep offline as much as possible)
 * Make ascii art logo an option for command
 
 Bells and whistles:
