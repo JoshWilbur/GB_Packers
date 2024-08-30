@@ -29,7 +29,7 @@ class Packers_Games:
                 return game
         return None
 
-    # Allow printing of the next game
+    # Print the upcoming game
     def print_next_game(self):
         self.closest_game = self.next_game()
 
