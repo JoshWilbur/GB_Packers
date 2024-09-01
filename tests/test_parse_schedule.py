@@ -21,9 +21,8 @@ class TestPackersGames(unittest.TestCase):
         self.assertEqual(schedule[0]["Opponent"], "Chicago Bears")
         self.assertIsInstance(schedule[0]["Date"], datetime)
 
-    # Test for the first game, this test may need to be more robust in the future
+    # Test only covers the first game, dates are set far into the future
     def test_next_game(self):
-        self.packers_games.game_schedule[0]["Date"] = datetime(2024, 9, 1)
         next_game = self.packers_games.next_game()
         self.assertEqual(next_game["Game"], "1")
         self.assertEqual(next_game["Opponent"], "Chicago Bears")

@@ -14,6 +14,19 @@ class Stats:
         self.week = week
         self.year = year
 
+    def save_to_csv(self, filename):
+        # Save the data to a CSV file
+        with open(filename, mode="w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerows(self.data)
+        print(f"Data saved to {filename}")
+
+    def read_csv(self, file_path):
+        with open(file_path, mode="r") as file:
+            reader = csv.DictReader(file)
+            info = [row for row in reader]
+        return info
+
     # ETHICAL DATA SCRAPING ROBOT
     def scrape_team_data(self):
         # Fetch website and error check
@@ -77,25 +90,8 @@ class Stats:
 
             self.data.append(row_data)
 
-    def save_to_csv(self, filename):
-        # Save the data to a CSV file
-        with open(filename, mode="w", newline="") as file:
-            writer = csv.writer(file)
-            writer.writerows(self.data)
-        print(f"Data saved to {filename}")
-
-    def scrape_and_save(self, filename):
-        self.scrape_team_data()
-        self.save_to_csv(filename)
-
-    def read_csv(self, file_path):
-        with open(file_path, mode="r") as file:
-            reader = csv.DictReader(file)
-            games = [row for row in reader]
-        return games
-
-    # This method outputs stats based on the input week (TODO: refine more)
-    def stats_on_week(self, file_path):
+    # This method outputs stats based on the input week (TODO refine more)
+    def team_stats_on_week(self, file_path, printing):
         games_data = self.read_csv(file_path)
         if self.week > len(games_data):
             return f"Failed to find week:{self.week}"
@@ -124,18 +120,20 @@ class Stats:
             "D_TO",
         ]
 
-        return {header: game[header] for header in output_headers}
+        # Format data to allow printing to terminal
+        data = {header: game[header] for header in output_headers}
 
-    # Output basic stats such as date, result, score, etc
-    def print_simple_stats(self, stats_on_week):
-        stats_on_week = print(
-            f"\nDATA FOR WEEK {self.week} OF THE {self.year}-{self.year+1} NFL SEASON:"
-            f"\nOn {stats_on_week['Date']}, {self.year} at {stats_on_week['Time']}, "
-            f"the Green Bay Packers ({stats_on_week['Record']}) "
-            f"played the {stats_on_week['Opponent']}\n"
-            f"Game result: {stats_on_week['Tm_Score']}-"
-            f"{stats_on_week['Opp_Score']} {stats_on_week['Result']}\n"
-        )
+        # Output basic stats such as date, result, score, etc
+        if printing:
+            print(
+                f"\nDATA FOR WEEK {self.week} OF THE {self.year}-"
+                f"{self.year+1} NFL SEASON:"
+                f"\nOn {data['Date']}, {self.year} at {data['Time']}, "
+                f"the Green Bay Packers ({data['Record']}) "
+                f"played the {data['Opponent']}\n"
+                f"Game result: {data['Tm_Score']}-"
+                f"{data['Opp_Score']} {data['Result']}\n"
+            )
 
 
 def main():
@@ -144,10 +142,9 @@ def main():
     week = 1
     stats = Stats(team, year, week)
     file_path = f"csv_files/packers_team_stats_{year}.csv"
-    stats.scrape_and_save(file_path)
-
-    game_data = stats.stats_on_week(file_path)
-    stats.print_simple_stats(game_data)
+    stats.scrape_team_data()
+    stats.save_to_csv(file_path)
+    stats.team_stats_on_week(file_path, 1)
 
 
 if __name__ == "__main__":
