@@ -5,13 +5,9 @@ import requests
 
 # This class has the ability to scrape team stats from PFR (see README)
 class Stats:
-    def __init__(self, team, year, week):
-        self.url = (
-            f"https://www.pro-football-reference.com/"
-            f"teams/{team}/{year}.htm#games"  # noqa E501
-        )
+    def __init__(self, team, year):
         self.data = []
-        self.week = week
+        self.team = team
         self.year = year
 
     def save_to_csv(self, filename):
@@ -27,16 +23,23 @@ class Stats:
             info = [row for row in reader]
         return info
 
-    # ETHICAL DATA SCRAPING ROBOT
-    def scrape_team_data(self):
+    def fetch_website(self, url):
         # Fetch website and error check
-        response = requests.get(self.url)
+        response = requests.get(url)
         if response.status_code == 200:
             self.soup = BeautifulSoup(response.text, "html.parser")
         else:
             raise Exception(
                 f"Failed to fetch page:" f"Status code {response.status_code}"
             )
+
+    # ETHICAL DATA SCRAPING ROBOT
+    def scrape_team_data(self):
+        team_data_url = (
+            f"https://www.pro-football-reference.com/"
+            f"teams/{self.team}/{self.year}.htm#games"  # noqa E501
+        )
+        self.fetch_website(team_data_url)
 
         # Find table with game data
         table = self.soup.find("table", {"id": "games"})
@@ -90,8 +93,49 @@ class Stats:
 
             self.data.append(row_data)
 
-    # This method outputs stats based on the input week (TODO refine more)
-    def team_stats_on_week(self, file_path, printing):
+        # Save stats to csv
+        self.save_to_csv("csv_files/packers_team_stats_{year}.csv")
+
+    # This method will scrape passing states from PFR
+    def scrape_passing_data(self):
+        passing_data_url = (
+            f"https://www.pro-football-reference.com"
+            f"/teams/{self.team}/{self.year}_advanced.htm#advanced_air_yards"
+        )
+        self.fetch_website(passing_data_url)
+
+        # Find table with game data
+        table = self.soup.find("table", {"id": "passing"})
+        if not table:
+            print("Failed to find the table with id 'games'")
+            return
+
+        # Define headers to grab from passing stats table
+        headers = []
+        self.data.append(headers)
+
+        # Extract the rows
+        rows = table.find("tbody").find_all("tr")
+        for row in rows:
+            # Skip rows with class: thead
+            if row.get("class") and "thead" in row.get("class"):
+                continue
+
+            # Extract cells from the row
+            cells = row.find_all("td")
+            row_data = [cell.get_text(strip=True) for cell in cells]
+
+            # Ensure the row has the same length as the header
+            if len(row_data) < len(headers):
+                row_data.extend([""] * (len(headers) - len(row_data)))
+
+            self.data.append(row_data)
+
+        self.save_to_csv("csv_files/packers_passing_stats_{year}.csv")
+
+    # This method outputs stats based on the input week
+    def team_stats_on_week(self, file_path, week, printing):
+        self.week = week
         games_data = self.read_csv(file_path)
         if self.week > len(games_data):
             return f"Failed to find week:{self.week}"
@@ -139,12 +183,12 @@ class Stats:
 def main():
     team = "gnb"
     year = 2023
-    week = 1
-    stats = Stats(team, year, week)
+    week = 11
     file_path = f"csv_files/packers_team_stats_{year}.csv"
-    stats.scrape_team_data()
-    stats.save_to_csv(file_path)
-    stats.team_stats_on_week(file_path, 1)
+    stats = Stats(team, year)
+    # stats.scrape_team_data()
+    # stats.team_stats_on_week(file_path, week, 1)
+    stats.scrape_passing_data()
 
 
 if __name__ == "__main__":

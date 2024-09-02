@@ -3,6 +3,7 @@ I am a diehard Green Bay Packers fan who also enjoys programming. This project c
 
 TODO:
 * Add passing, rushing, receiving, defensive and special teams stats
+* Refactor scrape_stats into two classes?
 * Unit testing for scrape_stats.py
 * Allow for easy use in the console (ie: turn this into a package)
 
