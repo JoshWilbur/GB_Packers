@@ -23,6 +23,28 @@ class Stats:
             info = [row for row in reader]
         return info
 
+    def grab_table_data(self, table):
+        # Define headers to grab from passing stats table
+        headers = []
+        self.data.append(headers)
+
+        # Extract the rows
+        rows = table.find("tbody").find_all("tr")
+        for row in rows:
+            # Skip rows with class: thead
+            if row.get("class") and "thead" in row.get("class"):
+                continue
+
+            # Extract cells from the row
+            cells = row.find_all("td")
+            row_data = [cell.get_text(strip=True) for cell in cells]
+
+            # Ensure the row has the same length as the header
+            if len(row_data) < len(headers):
+                row_data.extend([""] * (len(headers) - len(row_data)))
+
+            self.data.append(row_data)
+
     def fetch_website(self, url, print_html=0, output_file="output.html"):
         # Fetch website and error check
         response = requests.get(url)
@@ -102,7 +124,7 @@ class Stats:
         path = f"csv_files/packers_team_stats_{self.year}.csv"
         self.save_to_csv(path)
 
-    # This method will scrape passing states from PFR
+    # This method will scrape passing stats from PFR
     def scrape_passing_data(self):
         passing_data_url = (
             f"https://www.pro-football-reference.com"
@@ -113,29 +135,10 @@ class Stats:
         # Find table with game data
         table = self.soup.find("table", {"id": "advanced_air_yards"})
         if not table:
-            print("Failed to find the table with id 'advanced_accuracy'")
+            print("Failed to find the table with id 'advanced_air_yards'")
             return
 
-        # Define headers to grab from passing stats table
-        headers = []
-        self.data.append(headers)
-
-        # Extract the rows
-        rows = table.find("tbody").find_all("tr")
-        for row in rows:
-            # Skip rows with class: thead
-            if row.get("class") and "thead" in row.get("class"):
-                continue
-
-            # Extract cells from the row
-            cells = row.find_all("td")
-            row_data = [cell.get_text(strip=True) for cell in cells]
-
-            # Ensure the row has the same length as the header
-            if len(row_data) < len(headers):
-                row_data.extend([""] * (len(headers) - len(row_data)))
-
-            self.data.append(row_data)
+        self.grab_table_data(table)
 
         # Save stats to csv
         path = f"csv_files/packers_passing_stats_{self.year}.csv"
