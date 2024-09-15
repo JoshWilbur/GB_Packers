@@ -1,0 +1,39 @@
+name: Dependabot Auto Merge
+
+# This workflow will only run when dependabot opens a PR, ideally it should automatically merge it
+# Trying to see if this will work w/o a GH token
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  dependabot:
+    name: Auto Approve and Merge Dependabot PRs
+    if: ${{ startsWith(github.actor, 'dependabot') || startsWith(github.actor, 'github-actions') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install GitHub CLI (if needed)
+        run: sudo apt-get install gh
+
+      - name: Dependabot metadata
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@v2.2.0
+
+      - name: Approve Pull Request
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+
+      - name: Enable auto-merge for Dependabot Pull Requests
+        if: ${{ steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' }}
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
