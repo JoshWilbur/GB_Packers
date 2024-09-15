@@ -23,9 +23,12 @@ class Stats:
             info = [row for row in reader]
         return info
 
-    def grab_table_data(self, table):
-        # Define headers to grab from passing stats table
-        headers = []
+    def grab_table_data(self, table, defined_headers=None):
+        # Define headers to grab from table
+        if defined_headers is not None:
+            headers = defined_headers
+        else:
+            headers = []
         self.data.append(headers)
 
         # Extract the rows
@@ -101,28 +104,7 @@ class Stats:
             "D_EXP",
             "Sp_Tms",
         ]
-        self.data.append(headers)
-
-        # Extract the rows
-        rows = table.find("tbody").find_all("tr")
-        for row in rows:
-            # Skip rows with class: thead
-            if row.get("class") and "thead" in row.get("class"):
-                continue
-
-            # Extract cells from the row
-            cells = row.find_all("td")
-            row_data = [cell.get_text(strip=True) for cell in cells]
-
-            # Ensure the row has the same length as the header
-            if len(row_data) < len(headers):
-                row_data.extend([""] * (len(headers) - len(row_data)))
-
-            self.data.append(row_data)
-
-        # Save stats to csv
-        path = f"csv_files/packers_team_stats_{self.year}.csv"
-        self.save_to_csv(path)
+        self.grab_table_data(table, headers)
 
     # This method will scrape passing stats from PFR
     def scrape_passing_data(self):
@@ -137,7 +119,6 @@ class Stats:
         if not table:
             print("Failed to find the table with id 'advanced_air_yards'")
             return
-
         self.grab_table_data(table)
 
         # Save stats to csv
@@ -157,7 +138,6 @@ class Stats:
         if not table:
             print("Failed to find the table with id 'advanced_rushing'")
             return
-
         self.grab_table_data(table)
 
         # Save stats to csv
