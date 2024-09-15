@@ -144,6 +144,26 @@ class Stats:
         path = f"csv_files/packers_passing_stats_{self.year}.csv"
         self.save_to_csv(path)
 
+    # This method will scrape rushing stats from PFR
+    def scrape_rushing_data(self):
+        rushing_data_url = (
+            f"https://www.pro-football-reference.com"
+            f"/teams/{self.team}/{self.year}_advanced.htm#advanced_rushing"
+        )
+        self.fetch_website(rushing_data_url, 1)
+
+        # Find table with rushing data
+        table = self.soup.find("table", {"id": "advanced_rushing"})
+        if not table:
+            print("Failed to find the table with id 'advanced_rushing'")
+            return
+
+        self.grab_table_data(table)
+
+        # Save stats to csv
+        path = f"csv_files/packers_rushing_stats_{self.year}.csv"
+        self.save_to_csv(path)
+
     # This method outputs stats based on the input week
     def team_stats_on_week(self, file_path, week, printing):
         self.week = week
@@ -200,6 +220,7 @@ def main():
     stats.scrape_team_data()
     stats.team_stats_on_week(file_path, week, 1)
     stats.scrape_passing_data()
+    stats.scrape_rushing_data()
 
 
 if __name__ == "__main__":
