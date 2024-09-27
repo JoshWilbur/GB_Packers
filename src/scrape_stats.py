@@ -9,6 +9,7 @@ class Stats:
         self.data = []
         self.team = team
         self.year = year
+        self.soup = None
 
     def save_to_csv(self, filename):
         # Save the data to a CSV file

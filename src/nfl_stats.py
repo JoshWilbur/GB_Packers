@@ -137,13 +137,13 @@ class NFL_Stats(Stats):
 def main():
     team = "gnb"
     year = 2023
-    week = 11
+    week = 1
     file_path = f"csv_files/packers_team_stats_{year}.csv"
     stats = NFL_Stats(team, year)
     stats.scrape_team_data()
     stats.team_stats_on_week(file_path, week, 1)
     stats.scrape_passing_data()
-    stats.scrape_rushing_data()
+    # stats.scrape_rushing_data()
 
 
 if __name__ == "__main__":
